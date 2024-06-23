@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34024.191
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COIModManager", "src\COIModManager.csproj", "{6B357129-3BE9-431E-B063-213719710D2D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COILib", "..\COILibrary\src\COILib.csproj", "{E74309D2-FF7E-44D9-90EC-2380A3BB60A8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A39E02AA-F767-4065-B57D-A2C4C99D2777}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6B357129-3BE9-431E-B063-213719710D2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B357129-3BE9-431E-B063-213719710D2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E74309D2-FF7E-44D9-90EC-2380A3BB60A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E74309D2-FF7E-44D9-90EC-2380A3BB60A8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5FB37CDB-767E-43BA-A87D-70C15DD5025E}
+	EndGlobalSection
+EndGlobal
