@@ -17,8 +17,8 @@ namespace COIModManager.UI.MainMenu {
 
         public ModManagerWindow(bool darkMask = false) : base("COI Mod Manager".AsLoc(), darkMask) {
             this.Size(1400.px(), 1000.px()).Grow(1400f, 1000f);
-            _tabContainer = new TabContainer();
-            _settingsTab = new SettingsTab();
+            _tabContainer = [];
+            _settingsTab = [];
             _modsTab = new ModsTab(_tabContainer);
             _tabContainer.Add(c => c.RootPanel().Panel.Fill());
             _tabContainer.Add((LocStrFormatted)Tr.ConfigureMods_Action, Assets.Unity.UserInterface.General.Configure_svg, _modsTab, Scroll.No);

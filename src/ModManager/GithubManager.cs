@@ -24,7 +24,8 @@ namespace COIModManager.ModManager {
         }
 
         public RepoData GetRepoData(string repoUrl) {
-            var client = new GitHubClient(new ProductHeaderValue("GitHubManager"), new CredentialStore());
+            var token = ConfigManager.Instance.Get<string>(ConfigManager.Keys.Settings_GitHub_Token);
+            var client = new GitHubClient(new ProductHeaderValue("GitHubManager")) { Credentials = new Credentials(token) };
             var uri = new Uri(repoUrl);
             var segments = uri.Segments;
             var owner = segments[1].Trim('/');
@@ -65,15 +66,15 @@ namespace COIModManager.ModManager {
         private bool DownloadLatestRelease(RepoAsset asset, string path = null) {
             return Static.TryRun(() => {
                 var result = true;
-                if (path is null) path = ModsManager.Download_Folder;
+                path ??= ModsManager.Download_Folder;
                 if (!Directory.Exists(path)) Directory.CreateDirectory(path);
                 var zipFilePath = Path.Combine(path, asset.Name);
                 using (var client = new WebClient()) client.DownloadFile(new Uri(asset.BrowserDownloadUrl), zipFilePath);
                 using (var fileStream = new FileStream(zipFilePath, System.IO.FileMode.Open))
-                using (ZipArchive archive = new ZipArchive(fileStream, ZipArchiveMode.Read)) {
+                using (ZipArchive archive = new(fileStream, ZipArchiveMode.Read)) {
                     string[] folders = archive.GetFirstLevelDirectories();
                     if (folders.Length > 0) {
-                        if (asset.Mods == null) asset.Mods = new HashSet<string>();
+                        asset.Mods ??= [];
                         asset.Mods.UnionWith(folders);
                         archive.ExtractToDirectory(path, true);
                     }
@@ -82,16 +83,6 @@ namespace COIModManager.ModManager {
                 File.Delete(zipFilePath);
                 return result;
             });
-        }
-    }
-
-    internal class CredentialStore : ICredentialStore {
-
-        public Task<Credentials> GetCredentials() {
-            //var token = Environment.GetEnvironmentVariable("GITHUB_TOKEN");
-            var token = ConfigManager.Instance.Get<string>(ConfigManager.Keys.Settings_GitHub_Token);
-            var credentials = string.IsNullOrEmpty(token) ? new Credentials(token) : null;
-            return Task.FromResult(credentials);
         }
     }
 }

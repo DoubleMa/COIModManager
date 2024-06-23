@@ -12,7 +12,7 @@ using System;
 namespace COIModManager {
 
     public sealed class Mod : IMod {
-        public static Version ModVersion = new Version(1, 0, 0);
+        public static Version ModVersion = new(1, 0, 0);
         public bool Initialized { get; private set; } = false;
 
         public string Name => "COIModManager";
@@ -25,7 +25,6 @@ namespace COIModManager {
         }
 
         public void Initialize(DependencyResolver resolver, bool gameWasLoaded) {
-            InitializePatchers(resolver);
         }
 
         public void ChangeConfigs(Lyst<IConfig> configs) {
@@ -38,9 +37,6 @@ namespace COIModManager {
         }
 
         public void EarlyInit(DependencyResolver resolver) {
-        }
-
-        private void InitializePatchers(DependencyResolver resolver) {
         }
 
         private void Init() {

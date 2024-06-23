@@ -17,13 +17,13 @@ using System.Reflection;
 namespace COIModManager.Patcher {
 
     internal class MainMenuScreenPatcher : APatcher<MainMenuScreenPatcher> {
-        public override bool DefaultState => true;
-        public override bool Enabled => true;
+        protected override bool DefaultState => true;
+        protected override bool Enabled => true;
         private static ModManagerWindow _modManagerWindow;
         private static MainMenuScreen _instance;
 
         public MainMenuScreenPatcher() : base("MainMenuScreenPatcher") {
-            MethodBase constructor = typeof(MainMenuScreen).ATGetConstructor(new Type[] { typeof(IMain), typeof(IFileSystemHelper), typeof(UiBuilder), typeof(PreInitModsAndProtos), typeof(DependencyResolver), typeof(Option<string>), typeof(Action) });
+            MethodBase constructor = typeof(MainMenuScreen).ATGetConstructor([typeof(IMain), typeof(IFileSystemHelper), typeof(UiBuilder), typeof(PreInitModsAndProtos), typeof(DependencyResolver), typeof(Option<string>), typeof(Action)]);
             AddMethod(constructor, PrefixAllow, typeof(MainMenuScreenPatcher).GetHarmonyMethod(nameof(Postfix)));
         }
 
@@ -35,11 +35,11 @@ namespace COIModManager.Patcher {
 
         private static void HandleOpenModManager() {
             if (_instance is null) return;
-            if (!(_modManagerWindow is null)) {
+            if (_modManagerWindow is not null) {
                 if (_modManagerWindow.IsVisible()) _modManagerWindow.CloseSelf();
                 _modManagerWindow.RemoveFromHierarchy();
             }
-            _modManagerWindow = new ModManagerWindow();
+            _modManagerWindow = [];
             _instance.RunWithBuilder(bld => bld.AddComponent(_modManagerWindow));
             _instance.GetField<Set<Window>>("m_childWindows").Add(_modManagerWindow);
             _modManagerWindow.SetVisible(true);
@@ -48,7 +48,7 @@ namespace COIModManager.Patcher {
         private static Panel FindPanel(UiComponent component) {
             foreach (var child in component.AllChildren) {
                 if (child is Panel panel) return panel;
-                else if (child is UiComponent || child is Column) {
+                else if (child is UiComponent or Column) {
                     var result = FindPanel(child);
                     if (result != null) return result;
                 }

@@ -19,11 +19,11 @@ namespace COIModManager {
         }
 
         protected override Dict<Keys, AIniKeyData> GetKeyValues() {
-            IniSectionData Settings = new IniSectionData(loader, "Settings");
-            IniSectionData KeyCodes = new IniSectionData(loader, "KeyCodes", GenerateAcceptedKeyCodesComment(AcceptedKeyCodes));
+            IniSectionData Settings = new(m_loader, "Settings");
+            IniSectionData KeyCodes = new(m_loader, "KeyCodes", GenerateAcceptedKeyCodesComment(m_acceptedKeyCodes));
             return new Dict<Keys, AIniKeyData> {
-              { Keys.Settings_GitHub_Token, new IniKeyData<string>(loader, Settings,  "github_token", "", "A github token to increase the rate limits.\nCheck https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api for more info.") },
-              { Keys.KeyCodes_open_menu, new IniKeyData<KeyCode>(loader, KeyCodes,  "open_menu", fAcceptedKeyCodes(), KeyCode.F2, "KeyCode to open the dev menu.\nDefault: F2") },
+              { Keys.Settings_GitHub_Token, new IniKeyData<string>(m_loader, Settings,  "github_token", "", "A github token to increase the rate limits.\nCheck https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api for more info.") },
+              { Keys.KeyCodes_open_menu, new IniKeyData<KeyCode>(m_loader, KeyCodes,  "open_menu", FAcceptedKeyCodes(), KeyCode.F2, "KeyCode to open the dev menu.\nDefault: F2") },
             };
         }
     }

@@ -7,16 +7,11 @@ using System.Linq;
 namespace COIModManager.ModManager {
 
     [Serializable]
-    public class RepoModDataWarpper : SerializableObject<RepoModDataWarpper> {
-        public List<ModData> ModsData = new List<ModData>();
-        public List<RepoData> ReposData = new List<RepoData>();
+    public class RepoModDataWarpper(List<RepoData> ReposData, List<ModData> ModsData) : SerializableObject<RepoModDataWarpper> {
+        public List<ModData> ModsData = ModsData ?? [];
+        public List<RepoData> ReposData = ReposData ?? [];
 
         public RepoModDataWarpper() : this(null, null) {
-        }
-
-        public RepoModDataWarpper(List<RepoData> ReposData, List<ModData> ModsData) {
-            this.ModsData = ModsData ?? new List<ModData>();
-            this.ReposData = ReposData ?? new List<RepoData>();
         }
     }
 
@@ -96,7 +91,7 @@ namespace COIModManager.ModManager {
             DisplayName = modConfig.DisplayName;
             Authors = modConfig.Authors;
             Description = modConfig.Description;
-            IgnoreFiles = modConfig.IgnoreFiles ?? new HashSet<string>();
+            IgnoreFiles = modConfig.IgnoreFiles ?? [];
             if (!IgnoreFiles.Contains("ModManager")) IgnoreFiles.Add("ModManager");
             var imagePath = ModsManager.GetModImagePath(this);
             if (File.Exists(imagePath)) ImagePath = imagePath;
@@ -133,6 +128,6 @@ namespace COIModManager.ModManager {
 
     [Serializable]
     public class ModManagerData : SerializableObject<ModManagerData> {
-        public List<string> GitHubRepo { get; set; } = new List<string>();
+        public List<string> GitHubRepo { get; set; } = [];
     }
 }

@@ -33,7 +33,7 @@ namespace COIModManager.ModManager {
         private readonly int LimitRefreshRatePerMinute = 10;
         private DateTime lastRefresh;
         private RepoModDataWarpper savedData;
-        private readonly ActionVariable<bool> isLoading = new ActionVariable<bool>(false);
+        private readonly ActionVariable<bool> isLoading = new(false);
         public Action<RepoModDataWarpper> DataChangedEvent;
 
         public RepoModDataWarpper GetData() => savedData;
@@ -70,7 +70,7 @@ namespace COIModManager.ModManager {
             string[] repoUrls;
             if (savedData == null) {
                 savedData = new RepoModDataWarpper();
-                repoUrls = (await FetchModMangerFromUrl()).GitHubRepo.ToArray();
+                repoUrls = [.. (await FetchModMangerFromUrl()).GitHubRepo];
             }
             else repoUrls = savedData.ReposData.Select(e => e.RepoUrl).ToArray();
             if (lastRefresh == null || lastRefresh < DateTime.Now.AddMinutes(-LimitRefreshRatePerMinute)) {
@@ -83,8 +83,8 @@ namespace COIModManager.ModManager {
         }
 
         private async Task<ModManagerData> FetchModMangerFromUrl() {
-            using (HttpClient client = new HttpClient())
-                return ModManagerData.DeserializeNew(await client.GetStringAsync("https://demo.doubleoutsource.com/COI/ModManager.json"));
+            using HttpClient client = new();
+            return ModManagerData.DeserializeNew(await client.GetStringAsync("https://demo.doubleoutsource.com/COI/ModManager.json"));
         }
 
         public async void AddRepo(string repoUrl) {
@@ -156,20 +156,20 @@ namespace COIModManager.ModManager {
 
         public void DisableMod(ModData mod) {
             if (!mod.Enabled() || !Lock()) return;
-            Static.DeleteFilesAsync(GetModFolder(mod), mod.IgnoreFiles.ToArray());
+            Static.DeleteFilesAsync(GetModFolder(mod), [.. mod.IgnoreFiles]);
             UnLockAndSave();
         }
 
         public void EnableMod(ModData mod) {
             if (mod.Enabled() || !Lock()) return;
             ExtLog.Info(mod.IgnoreFiles.ToArray().ToPrint());
-            Static.CopyFilesAsync(GetDownloadedModFolder(mod), GetModFolder(mod), mod.IgnoreFiles.ToArray());
+            Static.CopyFilesAsync(GetDownloadedModFolder(mod), GetModFolder(mod), [.. mod.IgnoreFiles]);
             UnLockAndSave();
         }
 
         public void DeleteMod(ModData mod, bool innerCall = false) {
             if (mod == null || (!innerCall && !Lock())) return;
-            if (mod.Enabled()) Static.DeleteFilesAsync(GetModFolder(mod), mod.IgnoreFiles.ToArray());
+            if (mod.Enabled()) Static.DeleteFilesAsync(GetModFolder(mod), [.. mod.IgnoreFiles]);
             if (mod.Downloaded()) Static.DeleteFilesAsync(GetDownloadedModFolder(mod));
             savedData.ModsData.Remove(mod);
             if (!innerCall) UnLockAndSave();

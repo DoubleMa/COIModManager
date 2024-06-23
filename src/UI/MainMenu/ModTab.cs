@@ -21,7 +21,7 @@ namespace COIModManager.UI.MainMenu {
         private List<KeyButtonText> _keyBtnTexts;
         private bool _updating;
         private Dict<IBaseData, ModButton> _btnsMap;
-        private UiComponent _parent;
+        private readonly UiComponent _parent;
         private Column _overlay;
 
         public ModsTab(UiComponent parent) {
@@ -42,8 +42,8 @@ namespace COIModManager.UI.MainMenu {
         }
 
         private void InitComponents() {
-            _keyBtnTexts = new List<KeyButtonText>();
-            _btnsMap = new Dict<IBaseData, ModButton>();
+            _keyBtnTexts = [];
+            _btnsMap = [];
             this.AlignItemsStretch().MinHeight(Percent.Hundred);
             var modsPanel = new Column().AlignItemsStretch().Width(380.px());
             var modsTitlePanel = new Row().AlignItemsStart().JustifyItemsSpaceBetween();
@@ -88,7 +88,7 @@ namespace COIModManager.UI.MainMenu {
 
         private bool DeleteEnabled() => _selected != null && !ModsManager.Instance.IsLoading() && (_selected.Data is RepoData || _selected.Data.Downloaded());
 
-        private bool DisableEnabled() => _selected != null && !ModsManager.Instance.IsLoading() && _selected.Data.Downloaded() && !(_selected.Data is RepoData);
+        private bool DisableEnabled() => _selected != null && !ModsManager.Instance.IsLoading() && _selected.Data.Downloaded() && _selected.Data is not RepoData;
 
         private void HandleRefresh() => ModsManager.Instance.Refresh();
 
@@ -175,7 +175,7 @@ namespace COIModManager.UI.MainMenu {
         }
 
         private TitledModButtonPanel CreateTitledModButtonPanel(LocStrFormatted title, List<IBaseData> mods, Action<ModButton> onClick) {
-            List<ModButton> modsbtns = new List<ModButton>();
+            List<ModButton> modsbtns = [];
             _btnsMap.Clear();
             foreach (var mod in mods) {
                 var btn = new ModButton(onClick, mod);
@@ -187,7 +187,7 @@ namespace COIModManager.UI.MainMenu {
     }
 
     public class TitledModButtonPanel : TitledPanel {
-        private Row _row;
+        private readonly Row _row;
 
         public TitledModButtonPanel(LocStrFormatted title, List<IBaseData> mods, Action<ModButton> onClick) : base(title, new Row()) {
             _row = ((Row)AllChildren.Last()).AlignItemsStretch().Wrap().Width(Percent.Hundred);
