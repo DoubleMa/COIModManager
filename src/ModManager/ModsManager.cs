@@ -1,5 +1,6 @@
 ﻿using COILib.Extensions;
 using COILib.General;
+using COILib.Helper;
 using COILib.Logging;
 using System;
 using System.Collections.Generic;
@@ -156,21 +157,21 @@ namespace COIModManager.ModManager {
 
         public void DisableMod(ModData mod) {
             if (!mod.Enabled() || !Lock()) return;
-            Static.DeleteFilesAsync(GetModFolder(mod), [.. mod.IgnoreFiles]);
+            FileHelper.DeleteFilesAsync(GetModFolder(mod), [.. mod.IgnoreFiles]);
             UnLockAndSave();
         }
 
         public void EnableMod(ModData mod) {
             if (mod.Enabled() || !Lock()) return;
             ExtLog.Info(mod.IgnoreFiles.ToArray().ToPrint());
-            Static.CopyFilesAsync(GetDownloadedModFolder(mod), GetModFolder(mod), [.. mod.IgnoreFiles]);
+            FileHelper.CopyFilesAsync(GetDownloadedModFolder(mod), GetModFolder(mod), [.. mod.IgnoreFiles]);
             UnLockAndSave();
         }
 
         public void DeleteMod(ModData mod, bool innerCall = false) {
             if (mod == null || (!innerCall && !Lock())) return;
-            if (mod.Enabled()) Static.DeleteFilesAsync(GetModFolder(mod), [.. mod.IgnoreFiles]);
-            if (mod.Downloaded()) Static.DeleteFilesAsync(GetDownloadedModFolder(mod));
+            if (mod.Enabled()) FileHelper.DeleteFilesAsync(GetModFolder(mod), [.. mod.IgnoreFiles]);
+            if (mod.Downloaded()) FileHelper.DeleteFilesAsync(GetDownloadedModFolder(mod));
             savedData.ModsData.Remove(mod);
             if (!innerCall) UnLockAndSave();
         }
